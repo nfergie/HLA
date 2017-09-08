@@ -1,0 +1,241 @@
+/*
+Nicole Fergie
+CS17 1688
+08/06/2017
+Input-character upper or lower
+Output- multi-tap value
+*/
+
+program multiTap;
+#include("stdlib.hhf");
+static
+
+//Input-character upper or lower
+//Output- multi-tap value
+procedure tap( myCharacter : byte ); @nodisplay; @noframe;
+static
+iReturnAddress : dword;
+iTemp: int16;
+iRegisterValue : dword;
+
+begin tap;
+//entry sequence
+mov(EBX, iRegisterValue);//preserve register
+pop(iReturnAddress);
+//get rid of padding
+pop(iTemp);
+pop(iTemp);
+push(iReturnAddress);
+push(iRegisterValue);
+
+
+mov(iTemp, BX);
+mov(BL, myCharacter);
+mov(91, BL);
+
+//change upper characters to lower
+cmp(BL, myCharacter);
+jle afteradd;
+add(32, myCharacter);
+
+//find out what character it is and send result to AX
+afteradd:
+mov(97, BL);
+cmp(BL, myCharacter);
+jne b;
+mov(2, AX);
+jmp endsequence;
+
+b:
+mov(98, BL);
+cmp(BL, myCharacter);
+jne c;
+mov(22, AX);
+jmp endsequence;
+
+c:
+mov(99, BL);
+cmp(BL, myCharacter);
+jne d;
+mov(222, AX);
+jmp endsequence;
+
+d:
+mov(100, BL);
+cmp(BL, myCharacter);
+jne e;
+mov(3, AX);
+jmp endsequence;
+
+e:
+mov(101, BL);
+cmp(BL, myCharacter);
+jne f;
+mov(33, AX);
+jmp endsequence;
+
+f:
+mov(102, BL);
+cmp(BL, myCharacter);
+jne g;
+mov(333, AX);
+jmp endsequence;
+
+g:
+mov(103, BL);
+cmp(BL, myCharacter);
+jne h;
+mov(4, AX);
+jmp endsequence;
+
+h:
+mov(104, BL);
+cmp(BL, myCharacter);
+jne i;
+mov(44, AX);
+jmp endsequence;
+
+i:
+mov(105, BL);
+cmp(BL, myCharacter);
+jne j;
+mov(444, AX);
+jmp endsequence;
+
+j:
+mov(106, BL);
+cmp(BL, myCharacter);
+jne k;
+mov(5, AX);
+jmp endsequence;
+
+k:
+mov(107, BL);
+cmp(BL, myCharacter);
+jne l;
+mov(55, AX);
+jmp endsequence;
+
+l:
+mov(108, BL);
+cmp(BL, myCharacter);
+jne m;
+mov(555, AX);
+jmp endsequence;
+
+m:
+mov(109, BL);
+cmp(BL, myCharacter);
+jne n;
+mov(6, AX);
+jmp endsequence;
+
+n:
+mov(110, BL);
+cmp(BL, myCharacter);
+jne o;
+mov(66, AX);
+jmp endsequence;
+
+o:
+mov(111, BL);
+cmp(BL, myCharacter);
+jne p;
+mov(666, AX);
+jmp endsequence;
+
+p:
+mov(112, BL);
+cmp(BL, myCharacter);
+jne q;
+mov(7, AX);
+jmp endsequence;
+
+q:
+mov(113, BL);
+cmp(BL, myCharacter);
+jne r;
+mov(77, AX);
+jmp endsequence;
+
+r:
+mov(114, BL);
+cmp(BL, myCharacter);
+jne s;
+mov(777, AX);
+jmp endsequence;
+
+s:
+mov(115, BL);
+cmp(BL, myCharacter);
+jne t;
+mov(7777, AX);
+jmp endsequence;
+
+t:
+mov(116, BL);
+cmp(BL, myCharacter);
+jne u;
+mov(8, AX);
+jmp endsequence;
+
+u:
+mov(117, BL);
+cmp(BL, myCharacter);
+jne v;
+mov(88, AX);
+jmp endsequence;
+
+v:
+mov(118, BL);
+cmp(BL, myCharacter);
+jne w;
+mov(888, AX);
+jmp endsequence;
+
+w:
+mov(119, BL);
+cmp(BL, myCharacter);
+jne x;
+mov(9, AX);
+jmp endsequence;
+
+x:
+mov(120, BL);
+cmp(BL, myCharacter);
+jne y;
+mov(99, AX);
+jmp endsequence;
+
+y:
+mov(121, BL);
+cmp(BL, myCharacter);
+jne z;
+mov(999, AX);
+jmp endsequence;
+
+z:
+mov(9999, AX);
+
+//exit sequence
+endsequence:
+pop(EBX); //preserve register
+ret(); //send AX back
+end tap;
+
+begin multiTap;
+stdout.put("Feed Me: ");
+stdin.flushInput();
+stdin.getc();
+mov(0, AH);
+
+//add padding
+push(AX);
+push(BX);
+
+call tap;
+
+stdout.put("in Multi-tap, that's ");
+stdout.puti16(AX);
+stdout.newln();
+end multiTap;

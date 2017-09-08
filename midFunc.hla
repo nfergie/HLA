@@ -1,0 +1,125 @@
+/*
+Nicole Fergie
+CS17 1688
+07/23/2017
+Input-3 int16
+Output- middle value
+*/
+
+
+program MidFun;
+#include("stdlib.hhf");
+static
+iDataValue1 : int16 := 0;
+iDataValue2 : int16 := 0;
+iDataValue3 : int16 := 0;
+iDataValue4 : int16 := 0;//padding
+
+//input- 3 int16
+//output- middle value and 0 or 1 if all values are the same
+//register BX and AL must be free for proc use
+procedure findMid(x: int16; y: int16; z: int16); @nodisplay; @noframe;
+static 
+returnAddress : dword;
+iGarbage: int16;
+
+begin findMid;
+//entry sequence (no registers to preserve)
+pop(returnAddress); 
+pop(iGarbage); //padding
+pop(z);
+pop(y);
+pop(x);
+push(returnAddress);
+
+//calculate if all values are equal
+mov(x, BX);
+cmp(BX, y);
+jne calc;
+
+cmp(BX, z);
+jne calc;
+mov(1, AL);
+jmp EndSequence;
+
+//find middle value by series of comparisions
+calc:
+mov(0, AL);
+
+cmp(BX, y);
+jle XisLess;
+jmp YisLess;
+
+XisLess:
+mov(y, BX);
+cmp(BX, z);
+jle YinBX;
+jmp ZorX;
+
+ZorX:
+mov(x, BX);
+cmp(BX, z);
+jle ZinBX;
+jmp XinBX;
+
+YisLess:
+mov(y, BX);
+cmp(BX, z);
+jle XorZ;
+jmp YinBX;
+
+XorZ:
+mov(x, BX);
+cmp(BX, z);
+jle XinBX;
+jmp ZinBX;
+
+//move middle value into BX
+XinBX:
+mov(x, BX);
+jmp EndSequence;
+
+YinBX:
+mov(y, BX);
+jmp EndSequence;
+
+ZinBX:
+mov(z, BX);
+jmp EndSequence;
+
+//send AL and BX back to caller
+EndSequence:
+ret();
+end findMid;
+
+begin MidFun;
+stdout.put("Feed Me X: ");
+stdin.get(iDataValue1);
+stdout.put("Feed Me Y: ");
+stdin.get(iDataValue2);
+stdout.put("Feed Me Z: ");
+stdin.get(iDataValue3);
+
+push(iDataValue1);
+push(iDataValue2);
+push(iDataValue3);
+push(iDataValue4);//padding
+
+
+call findMid;
+
+cmp(AL, 1);
+je isEqual;
+
+stdout.puti16(BX);
+stdout.put(" is in the middle!", nl);
+jmp printAL;
+
+isEqual:
+stdout.put("X and Y and Z are all equal!", nl);
+
+printAL:
+stdout.put("AL = ");
+stdout.puti8(AL);
+stdout.newln();
+end MidFun;

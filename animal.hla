@@ -1,0 +1,25 @@
+/*
+Nicole Fergie
+CS17 1688
+06/26/2017
+Input-none
+Output- Poodle
+*/
+
+
+
+program animal;
+#include("stdlib.hhf");
+
+begin animal;
+
+//prints out the word poodle
+stdout.put("PPPP   OOO   OOO  DDDD  L     EEEEE !", nl);
+stdout.put("P   P O   O O   O D   D L     E     !", nl);
+stdout.put("PPPP  O   O O   O D   D L     EEE   !", nl);
+stdout.put("P     O   O O   O D   D L     E     !", nl);
+stdout.put("P      OOO   OOO  DDDD  LLLLL EEEEE !", nl);
+
+end animal;
+
+

@@ -1,0 +1,60 @@
+/*
+Nicole Fergie
+CS17 1688
+07/30/2017
+Input-1 float val
+Output- area of a circle
+*/
+
+program area;
+#include("stdlib.hhf");
+static
+r: real32;
+re: real32;
+
+//input- 1 real32 val
+//output- area of a circle into EAX
+procedure calcArea(r: real32); @nodisplay; @noframe;
+static
+returnAddress: dword;
+tempRad32: real32;
+four: real32 := 4.00;
+z: real32;
+
+begin calcArea;
+//entry sequence - no registers to preserve
+pop(returnAddress);
+pop(tempRad32);
+push(returnAddress);
+
+//calculations with floating point values
+finit();
+fld(tempRad32);
+fld(st0);
+fmulp();
+fldpi();
+fmulp();
+fld(four);
+fmulp();
+fstp(z);
+
+//exit sequence
+mov(z, EAX);
+ret();
+end calcArea;
+
+begin area;
+stdout.put("Lemme calculate the surface area of a sphere!", nl);
+stdout.put("Gimme r: ");
+stdin.get(r);
+
+push(r);
+
+call calcArea;
+mov(EAX, re);
+
+stdout.put("Surface Area = ");
+stdout.putr32(re, 10, 4, ' ');
+stdout.newln();
+
+end area;

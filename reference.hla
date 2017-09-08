@@ -1,0 +1,102 @@
+// Reference Parameter Template Solution For CS 17 Final
+// CS 17 Students must use this template as the basis for their solution. I hope it will help simplify your development task.
+// Please look at the two TODO: notes below
+
+program ReferenceProgram;
+#include( "stdlib.hhf" );
+static 
+iValue1 : int16 := 0;
+iValue2 : int16 := 0;
+iValue3 : int16 := 0;
+// TODO: CS 17 Students add code below to implement this function
+// Several hints are supplied
+procedure make20IfAddsUpToLessThan15( var i : int16; var j : int16; var k : int16 );@nodisplay; @noframe;
+static 
+dReturnAddress : dword;
+register1: dword;
+register2: dword;
+register3: dword;
+total :int16:=0;
+temp: int16 :=0;
+begin make20IfAddsUpToLessThan15; 
+// entry sequence
+// preserve registers used 
+mov(EBX, register1);
+mov(ECX, register2);
+mov(EDX, register3);
+pop( dReturnAddress );
+pop(EDX);
+pop(ECX);
+pop(EBX);
+
+// this is the return address
+
+// push back the return address
+push( dReturnAddress );
+
+// preserve registers
+push(register3);
+push(register2);
+push(register1);
+
+// begin sub-task
+mov(0, AX);
+mov([ECX], AX);
+add(AX, total);
+mov(0, AX);
+mov([EBX], AX);
+add(AX, total);
+mov(0, AX);
+mov([EDX], AX);
+add(AX, total);
+
+mov(15, AX);
+cmp(AX, total);
+jl endsequence;
+
+mov(20, AX);
+mov(AX, [EBX]);
+mov(AX, [ECX]);
+mov(AX, [EDX]);
+
+
+
+endsequence:
+// restore the registers used
+pop(EBX);
+pop(ECX);
+pop(EDX);
+
+ret();
+
+end make20IfAddsUpToLessThan15;
+
+ 
+begin ReferenceProgram;
+
+ 
+mov( 1, iValue1 );
+mov( 7, iValue2 );
+mov( 3, iValue3 );
+
+// TODO: push parameters to the function. 
+// Please remember that these parameters must be passed by-reference. 
+mov(&iValue1, EAX);
+push(EAX);
+mov(&iValue2, EAX);
+push(EAX);
+mov(&iValue3, EAX);
+push(EAX);
+
+
+call make20IfAddsUpToLessThan15;
+stdout.put( "the first parameter = " );
+stdout.put( iValue1 );
+stdout.put( " the second parameter = " );
+stdout.put( iValue2 );
+stdout.put( " the third parameter = " );
+stdout.put( iValue3 );
+stdout.newln();
+
+ 
+end ReferenceProgram;

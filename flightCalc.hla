@@ -1,0 +1,172 @@
+/*
+Nicole Fergie
+CS17 1688
+07/16/2017
+Input-two hex digits
+Output- total flight cost
+*/
+
+
+
+
+program flightCalc;
+#include("stdlib.hhf");
+static
+firstClass: int8;
+meal: int8;
+miles: int8;
+bags: int8;
+I: int8;
+total: int16 := 0;
+
+begin flightCalc;
+//get user input
+stdout.put("Feed me (2 hex digits): ");
+stdin.get(BH);
+
+mov(BH, CH);
+
+//get first class bit
+shl(1, CH);
+lahf();
+and(%0000_0001, AH);
+mov(AH, firstClass);
+
+//get meal bit
+shl(1, CH);
+lahf();
+and(%0000_0001, AH);
+mov(AH, meal);
+
+//get flight length
+mov(0, DH);
+shl(1, CH);
+lahf();
+and(%0000_0001, AH);
+add(AH, DH); //move first flight bit into DH
+
+//Loop to get length of trip
+LengthLp:
+	InitializeLenLP:
+		mov(0, I);
+	ForLenLpTermTest:
+		cmp(I,3);
+		jnl ForLenLpDone;
+	ForLenLpBody:
+		shl(1, CH);
+		lahf();
+		and(%0000_0001, AH);
+		shl(1, DH);
+		add(AH, DH);
+	ForLenLpInc:
+		inc(I);
+		jmp ForLenLpTermTest;
+ForLenLpDone:
+
+//make sure miles is not 0
+mov(DH, miles);
+cmp(DH, 0);
+jne restOfProg;
+stdout.put("Miles flown cannot be zero!", nl);
+jmp endOfProg;
+
+restOfProg:
+mov(0, DH);
+
+//get num of bags
+shl(1, CH);
+lahf();
+and(%0000_0001, AH);
+add(AH, DH);
+
+shl(1, CH);
+lahf();
+and(%0000_0001, AH);
+shl(1, DH);
+add(AH, DH);
+
+mov(DH, bags);
+
+//get total cost of miles
+mov(0, I);
+mov(miles, DH);
+mov(0, BX);
+
+
+WhileLp:
+WhileLpTermination:
+cmp(I, DH);
+jnl WhileLpDone;
+WhileLpBody:
+add(50, BX);
+inc(I);
+jmp WhileLp;
+WhileLpDone:
+mov(BX, total);
+
+
+//add cost of meal
+cmp(meal, 0);
+je notMeal;
+mov(10, BX);
+add(BX, total);
+
+
+//add cost of bags
+notMeal:
+cmp(bags, 0);
+je noBags;
+mov(0, I);
+mov(bags, DH);
+mov(0, BX);
+
+
+BaLp:
+BaLpTerm:
+cmp(I, DH);
+jnl BaLpDone;
+BaLpBody:
+add(25, BX);
+inc(I);
+jmp BaLp;
+BaLpDone:
+add(BX, total);
+
+noBags:
+
+//double cost of ticket if first class
+cmp(firstClass, 0);
+je notFirst;
+stdout.put("First class ticket", nl);
+mov(total, BX);
+add(BX, total);
+jmp printMeal;
+
+notFirst:
+stdout.put("Economy ticket", nl);
+
+printMeal:
+cmp(meal, 0);
+je notMealPrint;
+stdout.put("Meal Purchased", nl);
+jmp printBags;
+
+notMealPrint:
+stdout.put("No Meal", nl);
+
+printBags:
+cmp(bags, 0);
+je notBagsPrint;
+stdout.put(bags, " bags", nl);
+jmp printMiles;
+
+notBagsPrint:
+stdout.put("No bags", nl);
+
+printMiles:
+stdout.put(miles, "00 miles flown", nl);
+stdout.put("Total fees = $ ", total, nl);
+
+endOfProg:
+
+end flightCalc;
